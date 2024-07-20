@@ -1,0 +1,38 @@
+#include <vector>
+#include <iostream>
+using namespace std;
+
+
+int main() {
+    
+    int rowsOfData = 0;
+    int questions = 0;
+    
+    cin >> rowsOfData >> questions;
+    
+    vector<int> a[rowsOfData]; // Array of Vectors
+    
+    for (int i = 0; i < rowsOfData; i++)
+    {
+        int size = 0;
+        cin >> size;
+        
+        for (int j = 0; j < size; j++)
+        {
+            int number = 0;
+            cin >> number;
+            a[i].push_back(number);
+        }
+    }
+    
+    int row = 0;
+    int column = 0;
+    
+    for (int i = 0; i < questions; i++)
+    {
+        cin >> row >> column;
+        cout << a[row].at(column) << endl;
+    }
+    
+    return 0;
+}
