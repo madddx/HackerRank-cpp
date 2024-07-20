@@ -1,0 +1,109 @@
+#include <vector>
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+struct Attribute
+{
+    Attribute(string name, string value) 
+        : Name(name), Value(value){} 
+    string Name;
+    string Value;
+};
+class Tag 
+{
+public:
+    Tag(string tagName, Tag *parent_ptr = nullptr){
+        TagName = tagName;
+        Parent = parent_ptr;
+    }    
+    string GenerateHashKey(){
+        string key = "." + TagName;
+        string ParentName;
+        Tag* currentParent = Parent;
+        while (currentParent != nullptr) {
+            ParentName = "." + currentParent->TagName;
+            key.insert(0, ParentName);
+            currentParent = currentParent->Parent;
+        }
+        return key;
+    }
+    string TagName;
+    Tag *Parent;
+    vector<Attribute*> Attributes; 
+};
+void ProcessQueries(int q, unordered_map<string, Tag*> &tag_map){
+    string query;
+    for (int i = 0; i < q; i++){
+        cin >> query;     
+        int tildaIndex = query.find('~');
+        if (tildaIndex != string::npos)
+        {
+            string key = "." + query.substr(0, tildaIndex);
+            if (tag_map[key] == nullptr){
+                cout << "Not Found!" << endl;
+                continue;
+            }            
+            string attr_name = query.substr(tildaIndex + 1, query.size());
+            bool found = false;  
+            for (int j = 0; j < tag_map[key]->Attributes.size(); j++) {
+                if (tag_map[key]->Attributes[j]->Name == attr_name){
+                    cout << tag_map[key]->Attributes[j]->Value << endl;
+                    found = true;
+                    break;
+                }
+            }
+            if ( !found)
+                cout << "Not Found!" << endl;
+        }
+    }
+}
+void ProcessTags(int n, unordered_map<string, Tag*> &tag_map){
+    Tag* currentParent = nullptr;
+    string tagName;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> tagName;
+        if (tagName[1] == '/'){
+            if (currentParent != nullptr)
+                currentParent = currentParent->Parent;
+            continue;
+        }
+        tagName.erase(0,1); 
+        Tag* newTag = new Tag(tagName, currentParent);
+        currentParent = newTag;
+        
+        if (tagName[tagName.size()-1] == '>'){
+            newTag->TagName.pop_back();
+            string key = newTag->GenerateHashKey();
+            tag_map[key] = newTag;
+            continue;
+        }       
+        string propertyName, equalSign, propertyValue;     
+        while (true)
+        {
+            cin >> propertyName >> equalSign >> propertyValue;        
+            if (propertyValue[propertyValue.size()-1] == '>'){
+                propertyValue.pop_back();
+                propertyValue.pop_back();
+                propertyValue.erase(0,1);
+                Attribute* attr = new Attribute(propertyName, propertyValue);
+                newTag->Attributes.push_back(attr);
+                string key = newTag->GenerateHashKey();
+                tag_map[key] = newTag; 
+                break;
+            }
+            propertyValue.pop_back();
+            propertyValue.erase(0,1);
+            Attribute* attr = new Attribute(propertyName, propertyValue);
+            newTag->Attributes.push_back(attr);
+        }
+    }
+}
+int main() {
+    unsigned short n, q;
+    cin >> n >> q;
+    unordered_map<string, Tag*> tag_map;
+    ProcessTags(n, tag_map);
+    ProcessQueries(q, tag_map);
+    return 0;
+}
