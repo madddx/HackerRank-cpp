@@ -1,0 +1,30 @@
+  if(dynamic_cast<Fireball*>(spell))
+        static_cast<Fireball*>(spell)->revealFirepower();
+    else if(dynamic_cast<Frostbite*>(spell))
+        static_cast<Frostbite*>(spell)->revealFrostpower();
+    else if(dynamic_cast<Thunderstorm*>(spell))
+        static_cast<Thunderstorm*>(spell)->revealThunderpower();
+    else if(dynamic_cast<Waterbolt*>(spell))
+        static_cast<Waterbolt*>(spell)->revealWaterpower();
+    else {
+        string spellName = spell->revealScrollName();
+        string journalName = SpellJournal::read();
+        int lcs[spellName.length() + 1][journalName.length() + 1];
+        
+        for(int i = 0; i < spellName.length() + 1; i++) 
+            lcs[i][0] = 0;
+        for(int i = 0; i < journalName.length() + 1; i++) 
+            lcs[0][i] = 0;
+            
+        int c = 1, r = 1;
+        for(r = 1; r < spellName.length() + 1; r++) {
+           for(c = 1; c < journalName.length() + 1; c++) {
+                if(spellName[r - 1] == journalName[c - 1]) 
+                    lcs[r][c] = lcs[r - 1][c - 1] + 1;
+                else
+                    lcs[r][c] = (lcs[r - 1][c] > lcs[r][c - 1]) ? 
+                    lcs[r - 1][c] : lcs[r][c - 1];
+            } 
+        }
+        cout << lcs[spellName.length()][journalName.length()] << endl;
+    }
