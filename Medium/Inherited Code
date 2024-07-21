@@ -1,0 +1,15 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <exception>
+using namespace std;
+class BadLengthException : public std::exception{
+    private:
+    int l;
+    
+    public:
+    BadLengthException(int n) : l(n) {}
+    int what(){
+        return l;
+    }
+};
