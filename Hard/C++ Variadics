@@ -1,0 +1,8 @@
+template<bool... digits>
+int reversed_binary_value(){  
+    string digits_str {""};
+    for(bool digit : {digits...}){
+        digits_str = (digit ? "1" : "0") + digits_str;
+    }
+    return stoi(digits_str, 0, 2);
+}
