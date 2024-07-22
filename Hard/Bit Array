@@ -1,0 +1,44 @@
+#include <cmath>
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+typedef unsigned int ll;
+class BitArray {
+     ll * v, n, size;
+     enum { wordbits = sizeof(ll) * 8 }; 
+    int counter = 0;
+     public:
+       BitArray(ll _n) : n(_n) {
+        size = (n + wordbits - 1) / wordbits;
+           v = new ll[size];
+          for(ll i = 0; i < size ; ++i)  v[i] = 0;
+       }
+       
+    void insert(ll item){
+        v[item / wordbits ] |=  1 << item % wordbits;
+        ++counter;
+    }
+    
+    bool isMember(ll item) const {
+        return v[item / wordbits] & (1 << item  % wordbits );
+    }
+    
+    int count(){  return counter; }   
+};
+int main() {
+    ll N, S, P, Q, count = 0;
+    cin >> N >> S >> P >> Q;
+    ll modulo = 1LL << 31;
+     BitArray bitA(modulo);
+    ll prv = S & (modulo - 1);
+    bitA.insert(prv);
+    for( count = 1; count < N; ++count ){
+        prv = (prv * P + Q) & (modulo - 1);
+        if(!bitA.isMember(prv))
+               bitA.insert(prv);
+    }
+    cout << bitA.count();
+    return 0;
+}
