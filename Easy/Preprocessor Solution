@@ -1,0 +1,9 @@
+#define INF         100000000
+#define toStr(a)    #a
+#define io(v)       cin >> v
+#define foreach(v, i)   for (auto i=0; i<v.size(); i++)
+#define FUNCTION(fn, oper)    \
+        void fn(int& a, int b) {\
+            a = (a oper b) ? a : b;\
+        }\
+       
