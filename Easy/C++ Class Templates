@@ -1,0 +1,15 @@
+template <class T>
+class AddElements {
+private:
+    T element;
+public:
+    AddElements(const T& element) : element(element) {}
+
+    T add(const T& other) {
+        return element + other;
+    }
+
+    T concatenate(const T& other) {
+        return element + other;
+    }
+};
