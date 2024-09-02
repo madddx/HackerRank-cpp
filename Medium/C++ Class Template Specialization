@@ -1,0 +1,23 @@
+template<class T>
+struct Traits
+{
+    static std::string name(int);
+};
+
+template<>
+std::string Traits<Color>::name(int n)
+{
+    if(n==(int)Color::green)return std::string("green");
+    if(n==(int)Color::red)return std::string("red");   
+    if(n==(int)Color::orange)return std::string("orange");
+    return std::string("unknown");
+};
+
+template <>
+std::string Traits<Fruit>::name(int n)
+{
+    if(n==(int)Fruit::apple)return std::string("apple");
+    if(n==(int)Fruit::orange)return std::string("orange");   
+    if(n==(int)Fruit::pear)return std::string("pear");
+    return std::string("unknown");   
+}
